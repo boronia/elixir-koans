@@ -2,21 +2,20 @@ defmodule User do
   defstruct name: nil, age: nil
 
   def create(params) do
-    with {:ok, age} <- parse_age(params[:age]),
-         {:ok, name} <- parse_name(params[:name]) do
-      %User{age: age, name: name}
-    else
-      _ -> {:error, "Cannot create user"}
+    age = params[:age]
+    name = params[:name]
+
+    cond do
+      is_nil(age) or not is_integer(age) ->
+        {:error, "age must be an integer"}
+
+      is_nil(name) ->
+        {:error, "name is required"}
+
+      true ->
+        {:ok, %User{age: age, name: name}}
     end
   end
-
-  defp parse_age(nil), do: {:error, "age is required"}
-  defp parse_age(age) when is_integer(age), do: {:ok, age}
-  defp parse_age(_), do: {:error, "age must be an integer"}
-
-  defp parse_name(nil), do: {:error, "name is required"}
-  defp parse_name(""), do: parse_name(nil)
-  defp parse_name(name), do: {:ok, name}
 end
 
 defmodule With do
@@ -27,7 +26,7 @@ defmodule With do
   """
 
   koan "Age and name valid" do
-    assert %User{age: 12, name: "Sally"} == User.create(%{age: 12, name: "Sally"})
+    assert {:ok, %User{age: 12, name: "Sally"}} == User.create(%{age: 12, name: "Sally"})
   end
 
   koan "Age invalid" do
@@ -36,9 +35,5 @@ defmodule With do
 
   koan "Name invalid" do
     assert {:error, "name is required"} == User.create(%{age: 12, name: nil})
-  end
-
-  koan "Any other error" do
-    assert {:error, "Cannot create user"} == User.create(%{})
   end
 end
