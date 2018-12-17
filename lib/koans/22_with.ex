@@ -36,4 +36,8 @@ defmodule With do
   koan "Name invalid" do
     assert {:error, "name is required"} == User.create(%{age: 12, name: nil})
   end
+
+  koan "Both invalid" do
+    assert {:error, "name and age are required"} == User.create(%{})
+  end
 end

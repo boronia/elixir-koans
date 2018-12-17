@@ -1,4 +1,4 @@
-defmodule RefactorMe do
+defmodule NestedIf do
   use Koans
 
   @intro """
@@ -10,14 +10,12 @@ defmodule RefactorMe do
       raise ArgumentError, message: "Name cannot be nil or empty"
     else
       if String.contains?(name, " ") do
-
         split_name = name |> String.split(" ")
 
         first_letter = split_name |> List.first() |> String.slice(0, 1)
         last_letter = split_name |> List.last() |> String.slice(0, 1)
 
         "#{first_letter}#{delimiter}#{last_letter}"
-
       else
         name |> String.slice(0, 1)
       end
@@ -37,7 +35,7 @@ defmodule RefactorMe do
   end
 
   koan "Empty string should raise an error" do
-     assert_raise ArgumentError, "Name cannot be nil or empty", fn -> initials("") end
+    assert_raise ArgumentError, "Name cannot be nil or empty", fn -> initials("") end
   end
 
   koan "But how about more than 2 characters initials?" do
@@ -48,5 +46,4 @@ defmodule RefactorMe do
     assert initials("Veronica Luke", ".") == ___
     assert initials("Veronica Wai Ming Luke", ".") == ___
   end
-
 end
