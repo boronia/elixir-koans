@@ -22,7 +22,7 @@ defmodule With do
   use Koans
 
   @intro """
-  How to use with
+  How do I refactor my conditional that does error handling using 'with'?
   """
 
   koan "Age and name valid" do
