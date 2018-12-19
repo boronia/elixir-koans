@@ -4,22 +4,31 @@ defmodule NestedIf do
   @intro """
   How do I turn crappy Elixir code into Beautiful Elixir code?
   """
+  def initials(name, delimiter \\ "")
 
-  def initials(name, delimiter \\ "") do
-    if name == nil or name == "" do
-      raise ArgumentError, message: "Name cannot be nil or empty"
-    else
-      if String.contains?(name, " ") do
-        split_name = name |> String.split(" ")
+  def initials(nil, _delimiter) do
+    raise ArgumentError, message: "Name cannot be nil"
+  end
 
-        first_letter = split_name |> List.first() |> String.slice(0, 1)
-        last_letter = split_name |> List.last() |> String.slice(0, 1)
+  def initials("", _delimiter) do
+    raise ArgumentError, message: "Name cannot be empty"
+  end
 
-        "#{first_letter}#{delimiter}#{last_letter}"
-      else
-        name |> String.slice(0, 1)
-      end
-    end
+  def initials(name, delimiter) do
+    do_initials(name, delimiter, String.contains?(name, " "))
+  end
+
+  defp do_initials(name, delimiter, true) do
+    split_name = name |> String.split(" ")
+
+    first_letter = split_name |> List.first() |> String.slice(0, 1)
+    last_letter = split_name |> List.last() |> String.slice(0, 1)
+
+    "#{first_letter}#{delimiter}#{last_letter}"
+  end
+
+  defp do_initials(name, delimiter, _) do
+    name |> String.slice(0, 1)
   end
 
   koan "Simple 2 characters initials should be no problemo" do
@@ -31,11 +40,11 @@ defmodule NestedIf do
   end
 
   koan "Nil should raise an error" do
-    assert_raise ArgumentError, "Name cannot be nil or empty", fn -> initials(nil) end
+    assert_raise ArgumentError, "Name cannot be nil", fn -> initials(nil) end
   end
 
   koan "Empty string should raise an error" do
-    assert_raise ArgumentError, "Name cannot be nil or empty", fn -> initials("") end
+    assert_raise ArgumentError, "Name cannot be empty", fn -> initials("") end
   end
 
   koan "But how about more than 2 characters initials?" do
