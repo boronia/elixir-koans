@@ -2,7 +2,7 @@ defmodule User do
   defstruct name: nil, age: nil
 end
 
-defmodule Context do
+defmodule UserContext do
   @records %{
     1 => %User{name: "Luke", age: 18},
     2 => %User{age: 12, name: "Sally"}
@@ -18,9 +18,9 @@ defmodule With do
   use Koans
 
   def get_user(id) do
-    with user <- Context.find(id) do
+    with user <- UserContext.find(id) do
       if is_nil(user) do
-        {:error, "Failed to find user by id #{id}"}
+        {:error, "User not found with id: #{id}"}
       else
         {:ok, user}
       end
@@ -40,6 +40,6 @@ defmodule With do
   end
 
   koan "Non exist user" do
-    assert {:error, "Failed to find user by id 3"} == get_user(3)
+    assert {:error, "User not found with id: 3"} == get_user(3)
   end
 end
